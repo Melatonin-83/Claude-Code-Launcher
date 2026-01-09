@@ -17,7 +17,9 @@
       "Bash(git commit:*)",
       "Bash(\"C:\\\\Program Files\\\\GitHub CLI\\\\gh.exe\" repo create ClaudeCodeLauncher --public --source=\"D:\\\\cs_Projects\\\\Claude-code_CLI\\\\ClaudeCodeLauncher\" --remote=origin --push --description \"A sleek Windows Forms app to launch Claude Code CLI in any directory\")",
       "Bash(git rm:*)",
-      "Bash(Remove-Item -Recurse -Force \"ClaudeCodeLauncher\\\\.git\")"
+      "Bash(Remove-Item -Recurse -Force \"ClaudeCodeLauncher\\\\.git\")",
+      "Bash(gh repo create:*)",
+      "Bash(git push)"
     ]
   }
 }

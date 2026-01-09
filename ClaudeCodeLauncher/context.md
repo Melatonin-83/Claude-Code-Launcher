@@ -1,5 +1,10 @@
 # Claude Code Launcher - Application Context
 
+## Repository
+- **GitHub**: https://github.com/Melatonin-83/Claude-Code-Launcher
+- **Branch**: master
+- **Clone**: `git clone https://github.com/Melatonin-83/Claude-Code-Launcher.git`
+
 ## Overview
 Claude Code Launcher is a Windows Forms desktop application built with C# and .NET 9. It provides a sleek, user-friendly interface for launching Claude Code CLI in a user-selected directory.
 
@@ -103,6 +108,22 @@ dotnet publish -c Release -r win-x64 --self-contained true -p:PublishSingleFile=
 - Colors defined in ClaudeTheme for easy theming adjustments
 - Uses Win32 `CreateRoundRectRgn` for rounded corners
 - Requires Windows Terminal for best experience (falls back to cmd)
+
+## Git Workflow
+```bash
+# Check status
+git status
+
+# Stage and commit
+git add .
+git commit -m "Your commit message"
+
+# Push to GitHub
+git push
+
+# Pull latest changes
+git pull
+```
 
 ---
 *Last Updated: January 2026*
