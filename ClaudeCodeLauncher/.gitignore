@@ -1,0 +1,25 @@
+# Build results
+bin/
+obj/
+publish/
+
+# User-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Visual Studio
+.vs/
+*.rsuser
+
+# Rider
+.idea/
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# macOS
+.DS_Store
