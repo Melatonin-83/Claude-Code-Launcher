@@ -31,6 +31,16 @@ partial class MainForm
         this.txtPath = new TextBox();
         this.btnBrowse = new Button();
 
+        // Executable Path Selection
+        this.lblExecutablePath = new Label();
+        this.pnlExecutableContainer = new Panel();
+        this.txtExecutablePath = new TextBox();
+        this.btnBrowseExecutable = new Button();
+
+        // Interface Style Selection
+        this.lblInterfaceStyle = new Label();
+        this.cboInterfaceStyle = new ComboBox();
+
         // Recent Directories
         this.lblRecentDirectories = new Label();
         this.pnlRecentContainer = new Panel();
@@ -103,13 +113,45 @@ partial class MainForm
         this.pnlPathContainer.Controls.Add(this.txtPath);
         this.pnlPathContainer.Controls.Add(this.btnBrowse);
 
+        // ===== Executable Path Selection =====
+        this.lblExecutablePath.Text = "Executable Path:";
+        this.lblExecutablePath.AutoSize = true;
+        this.lblExecutablePath.Location = new Point(24, 132);
+
+        this.pnlExecutableContainer.Location = new Point(24, 156);
+        this.pnlExecutableContainer.Size = new Size(432, 40);
+        this.pnlExecutableContainer.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+
+        this.txtExecutablePath.Location = new Point(0, 4);
+        this.txtExecutablePath.Size = new Size(340, 32);
+        this.txtExecutablePath.PlaceholderText = "Leave empty to use 'claude' from PATH";
+        this.txtExecutablePath.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+
+        this.btnBrowseExecutable.Text = "Browse...";
+        this.btnBrowseExecutable.Size = new Size(80, 32);
+        this.btnBrowseExecutable.Location = new Point(352, 4);
+        this.btnBrowseExecutable.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+
+        this.pnlExecutableContainer.Controls.Add(this.txtExecutablePath);
+        this.pnlExecutableContainer.Controls.Add(this.btnBrowseExecutable);
+
+        // ===== Interface Style Selection =====
+        this.lblInterfaceStyle.Text = "Interface Style:";
+        this.lblInterfaceStyle.AutoSize = true;
+        this.lblInterfaceStyle.Location = new Point(24, 208);
+
+        this.cboInterfaceStyle.Location = new Point(130, 204);
+        this.cboInterfaceStyle.Size = new Size(200, 24);
+        this.cboInterfaceStyle.DropDownStyle = ComboBoxStyle.DropDownList;
+        this.cboInterfaceStyle.Anchor = AnchorStyles.Top | AnchorStyles.Left;
+
         // ===== Recent Directories =====
         this.lblRecentDirectories.Text = "Recent Directories:";
         this.lblRecentDirectories.AutoSize = true;
-        this.lblRecentDirectories.Location = new Point(24, 136);
+        this.lblRecentDirectories.Location = new Point(24, 244);
 
-        this.pnlRecentContainer.Location = new Point(24, 160);
-        this.pnlRecentContainer.Size = new Size(432, 180);
+        this.pnlRecentContainer.Location = new Point(24, 268);
+        this.pnlRecentContainer.Size = new Size(432, 120);
         this.pnlRecentContainer.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Bottom;
 
         this.lstRecentDirectories.Dock = DockStyle.Fill;
@@ -119,24 +161,24 @@ partial class MainForm
 
         this.lnkClearHistory.Text = "Clear History";
         this.lnkClearHistory.AutoSize = true;
-        this.lnkClearHistory.Location = new Point(374, 348);
+        this.lnkClearHistory.Location = new Point(374, 396);
         this.lnkClearHistory.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
 
         // ===== Launch Button =====
         this.btnLaunch.Text = "LAUNCH CLAUDE CODE";
         this.btnLaunch.Size = new Size(432, 50);
-        this.btnLaunch.Location = new Point(24, 376);
+        this.btnLaunch.Location = new Point(24, 424);
         this.btnLaunch.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
 
         // ===== Quick Links Panel =====
-        this.pnlQuickLinks.Location = new Point(24, 436);
+        this.pnlQuickLinks.Location = new Point(24, 484);
         this.pnlQuickLinks.Size = new Size(432, 28);
         this.pnlQuickLinks.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
 
         // ===== Status Label =====
         this.lblStatus.Text = "";
         this.lblStatus.AutoSize = true;
-        this.lblStatus.Location = new Point(24, 470);
+        this.lblStatus.Location = new Point(24, 518);
         this.lblStatus.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
 
         this.btnGetClaude.Text = "Get Claude CLI";
@@ -164,15 +206,19 @@ partial class MainForm
         // ===== MainForm =====
         this.AutoScaleDimensions = new SizeF(7F, 15F);
         this.AutoScaleMode = AutoScaleMode.Font;
-        this.ClientSize = new Size(480, 500);
+        this.ClientSize = new Size(480, 550);
         this.FormBorderStyle = FormBorderStyle.None;
         this.StartPosition = FormStartPosition.CenterScreen;
         this.Text = "Claude Code Launcher";
-        this.MinimumSize = new Size(400, 440);
+        this.MinimumSize = new Size(400, 500);
 
         this.Controls.Add(this.pnlTitleBar);
         this.Controls.Add(this.lblSelectDirectory);
         this.Controls.Add(this.pnlPathContainer);
+        this.Controls.Add(this.lblExecutablePath);
+        this.Controls.Add(this.pnlExecutableContainer);
+        this.Controls.Add(this.lblInterfaceStyle);
+        this.Controls.Add(this.cboInterfaceStyle);
         this.Controls.Add(this.lblRecentDirectories);
         this.Controls.Add(this.pnlRecentContainer);
         this.Controls.Add(this.lnkClearHistory);
@@ -194,6 +240,12 @@ partial class MainForm
     private Panel pnlPathContainer;
     private TextBox txtPath;
     private Button btnBrowse;
+    private Label lblExecutablePath;
+    private Panel pnlExecutableContainer;
+    private TextBox txtExecutablePath;
+    private Button btnBrowseExecutable;
+    private Label lblInterfaceStyle;
+    private ComboBox cboInterfaceStyle;
     private Label lblRecentDirectories;
     private Panel pnlRecentContainer;
     private ListBox lstRecentDirectories;

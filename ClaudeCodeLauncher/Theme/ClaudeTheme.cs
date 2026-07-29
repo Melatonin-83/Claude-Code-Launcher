@@ -123,4 +123,15 @@ public static class ClaudeTheme
             panel.BorderStyle = BorderStyle.FixedSingle;
         }
     }
+
+    /// <summary>
+    /// Creates a styled ComboBox with Claude theme.
+    /// </summary>
+    public static void StyleComboBox(ComboBox comboBox)
+    {
+        comboBox.BackColor = SecondaryBackground;
+        comboBox.ForeColor = TextPrimary;
+        comboBox.FlatStyle = FlatStyle.Flat;
+        comboBox.Font = new Font(FontFamily, FontSizeNormal);
+    }
 }

@@ -8,6 +8,7 @@ namespace ClaudeCodeLauncher;
 public partial class MainForm : Form
 {
     private readonly RecentDirectoriesService _recentService;
+    private readonly AppSettingsService _settingsService;
     private string? _selectedPath;
 
     // For dragging the borderless window
@@ -25,6 +26,7 @@ public partial class MainForm : Form
     {
         InitializeComponent();
         _recentService = new RecentDirectoriesService();
+        _settingsService = new AppSettingsService();
 
         // Enable double buffering to reduce flickering
         SetStyle(ControlStyles.OptimizedDoubleBuffer |
@@ -34,6 +36,8 @@ public partial class MainForm : Form
         ApplyTheme();
         SetupEventHandlers();
         LoadRecentDirectories();
+        LoadExecutablePath();
+        LoadInterfaceStyles();
         UpdateLaunchButtonState();
 
         // Apply rounded corners to the form
@@ -66,6 +70,16 @@ public partial class MainForm : Form
         pnlPathContainer.BackColor = Color.Transparent;
         ClaudeTheme.StyleTextBox(txtPath);
         ClaudeTheme.StyleButton(btnBrowse);
+
+        // Executable path selection
+        ClaudeTheme.StyleLabel(lblExecutablePath);
+        pnlExecutableContainer.BackColor = Color.Transparent;
+        ClaudeTheme.StyleTextBox(txtExecutablePath);
+        ClaudeTheme.StyleButton(btnBrowseExecutable);
+
+        // Interface style selection
+        ClaudeTheme.StyleLabel(lblInterfaceStyle);
+        ClaudeTheme.StyleComboBox(cboInterfaceStyle);
 
         // Recent directories
         ClaudeTheme.StyleLabel(lblRecentDirectories);
@@ -119,6 +133,13 @@ public partial class MainForm : Form
         // Directory selection
         btnBrowse.Click += BtnBrowse_Click;
         txtPath.TextChanged += (s, e) => UpdateLaunchButtonState();
+
+        // Executable path selection
+        btnBrowseExecutable.Click += BtnBrowseExecutable_Click;
+        txtExecutablePath.TextChanged += TxtExecutablePath_TextChanged;
+
+        // Interface style selection
+        cboInterfaceStyle.SelectedIndexChanged += CboInterfaceStyle_SelectedIndexChanged;
 
         // Recent directories
         lstRecentDirectories.SelectedIndexChanged += LstRecentDirectories_SelectedIndexChanged;
@@ -198,6 +219,73 @@ public partial class MainForm : Form
         _selectedPath = path;
         txtPath.Text = path;
         UpdateLaunchButtonState();
+    }
+
+    #endregion
+
+    #region Executable Path
+
+    private void LoadExecutablePath()
+    {
+        txtExecutablePath.Text = _settingsService.ExecutablePath;
+    }
+
+    private void BtnBrowseExecutable_Click(object? sender, EventArgs e)
+    {
+        using var dialog = new OpenFileDialog
+        {
+            Title = "Select CLI Executable",
+            Filter = "Executable files (*.exe;*.bat;*.cmd)|*.exe;*.bat;*.cmd|All files (*.*)|*.*",
+            CheckFileExists = true
+        };
+
+        // Start from current executable path if available
+        if (!string.IsNullOrEmpty(_settingsService.ExecutablePath) && File.Exists(_settingsService.ExecutablePath))
+        {
+            dialog.InitialDirectory = Path.GetDirectoryName(_settingsService.ExecutablePath);
+            dialog.FileName = Path.GetFileName(_settingsService.ExecutablePath);
+        }
+
+        if (dialog.ShowDialog() == DialogResult.OK)
+        {
+            txtExecutablePath.Text = dialog.FileName;
+        }
+    }
+
+    private void TxtExecutablePath_TextChanged(object? sender, EventArgs e)
+    {
+        _settingsService.SetExecutablePath(txtExecutablePath.Text);
+    }
+
+    #endregion
+
+    #region Interface Style
+
+    private void LoadInterfaceStyles()
+    {
+        cboInterfaceStyle.Items.Clear();
+        cboInterfaceStyle.Items.Add("Standard");
+        cboInterfaceStyle.Items.Add("MU/TH/UR - INTERFACE 2037");
+
+        // Select based on saved setting
+        cboInterfaceStyle.SelectedIndex = _settingsService.InterfaceStyle == InterfaceStyle.MUTHR ? 1 : 0;
+
+        // Show warning if MU/TH/UR is not available
+        if (!_settingsService.IsMuthrAvailable() && _settingsService.InterfaceStyle == InterfaceStyle.MUTHR)
+        {
+            ShowStatus("MU/TH/UR batch file not found. Using standard mode.", isError: true);
+        }
+    }
+
+    private void CboInterfaceStyle_SelectedIndexChanged(object? sender, EventArgs e)
+    {
+        var style = cboInterfaceStyle.SelectedIndex == 1 ? InterfaceStyle.MUTHR : InterfaceStyle.Standard;
+        _settingsService.SetInterfaceStyle(style);
+
+        if (style == InterfaceStyle.MUTHR && !_settingsService.IsMuthrAvailable())
+        {
+            ShowStatus("Warning: MU/TH/UR batch file not found at expected path.", isError: true);
+        }
     }
 
     #endregion
@@ -298,17 +386,9 @@ public partial class MainForm : Form
 
         try
         {
-            // Try Windows Terminal first
-            if (TryLaunchWithWindowsTerminal(_selectedPath))
+            if (ClaudeLaunchService.Launch(_selectedPath, _settingsService))
             {
-                ShowStatus("Launched Claude Code in Windows Terminal");
-                return;
-            }
-
-            // Fallback to cmd
-            if (TryLaunchWithCmd(_selectedPath))
-            {
-                ShowStatus("Launched Claude Code in Command Prompt");
+                ShowStatus("Launched Claude Code");
                 return;
             }
 
@@ -317,46 +397,6 @@ public partial class MainForm : Form
         catch (Exception ex)
         {
             ShowStatus($"Error: {ex.Message}", isError: true);
-        }
-    }
-
-    private bool TryLaunchWithWindowsTerminal(string path)
-    {
-        try
-        {
-            var startInfo = new ProcessStartInfo
-            {
-                FileName = "wt.exe",
-                Arguments = $"--startingDirectory \"{path}\" -- cmd /k claude",
-                UseShellExecute = true
-            };
-
-            Process.Start(startInfo);
-            return true;
-        }
-        catch
-        {
-            return false;
-        }
-    }
-
-    private bool TryLaunchWithCmd(string path)
-    {
-        try
-        {
-            var startInfo = new ProcessStartInfo
-            {
-                FileName = "cmd.exe",
-                Arguments = $"/k cd /d \"{path}\" && claude",
-                UseShellExecute = true
-            };
-
-            Process.Start(startInfo);
-            return true;
-        }
-        catch
-        {
-            return false;
         }
     }
 
